@@ -1,0 +1,47 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# VS Code / PyCharm / IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# PyInstaller
+dist/
+build/
+*.spec
+
+# Test coverage / pytest
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+
+# Logs & local debug
+*.log
+*.tmp
+*.bak
+
+# User data / alias storage (if you decide to persist aliases)
+aliases.json
+
+# Packaging
+*.egg-info/
+.eggs/
+*.egg
+
+# Jupyter (if you ever use it)
+.ipynb_checkpoints/
+
+# pipenv/po
+
