@@ -1,0 +1,23 @@
+#!/bin/bash
+
+FULL_PATH="$(readlink -f "$0")"
+SCRIPT_DIR="${FULL_PATH%/*}"
+OUTPUT=$("$SCRIPT_DIR/dist/qcd/qcd" "$1" "$2")
+
+# Process the output from the Python script
+if [[ "$OUTPUT" == message:* ]]; then
+  echo "${OUTPUT#message:}"
+elif [[ "$OUTPUT" == error:* ]]; then
+  echo "Error: ${OUTPUT#error:}"
+elif [[ "$OUTPUT" == navigate:* ]]; then
+  TARGET_DIR="${OUTPUT#navigate:}"
+  if [ -d "$TARGET_DIR" ]; then
+    cd "$TARGET_DIR" || exit
+  else
+    echo "Error: Directory '$TARGET_DIR' does not exist."
+  fi
+else
+  echo "Error: Unexpected output format."
+fi
+
+
