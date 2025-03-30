@@ -4,7 +4,16 @@ import sys
 from pathlib import Path
 
 ALIASES_FILE = Path.home() / ".qcd_aliases.json"
-RESERVED_COMMANDS = {"set", "list", "remove"}
+RESERVED_COMMANDS = {"set", "list", "remove", "help"}
+
+def send_error(message):
+    print(f"error:{message}", file=sys.stderr)
+
+def send_message(message):
+    print(f"message:{message}")
+
+def send_navigate(path):
+    print(f"navigate:{path}")
 
 def load_aliases():
     if not ALIASES_FILE.exists():
@@ -16,49 +25,56 @@ def save_aliases(aliases):
     with open(ALIASES_FILE, "w") as f:
         json.dump(aliases, f, indent=2)
 
-def set_alias(alias, aliases):
+def set_alias(alias):
+    aliases = load_aliases()
     path = str(Path.cwd())
 
     if alias in RESERVED_COMMANDS:
-        print(f"Error: '{alias}' is a reserved command and cannot be used as an alias.", file=sys.stderr)
+        send_error(f"'{alias}' is a reserved command and cannot be used as an alias.")
         return
 
     aliases[alias] = path
     save_aliases(aliases)
-    print(f"Alias '{alias}' set to '{path}'")
+    send_message(f"Alias '{alias}' set to '{path}'.")
 
-def list_aliases(aliases):
+def list_aliases():
+    aliases = load_aliases()
     if not aliases:
-        print("No aliases set.")
+        send_message("No aliases set.")
+        return
+    
+    message = "Aliases:\n"
     for name, path in aliases.items():
-        print(f"{name} => {path}")
+        message += f"  {name}: {path}\n"
 
-def remove_alias(alias, aliases):
+    send_message(message.strip())
+
+def remove_alias(alias):
+    aliases = load_aliases()
     if alias in RESERVED_COMMANDS:
-        print(f"Error: '{alias}' is a reserved command and cannot be removed.", file=sys.stderr)
+        send_error(f"'{alias}' is a reserved command and cannot be removed.")
         return
 
     if alias in aliases:
         del aliases[alias]
         save_aliases(aliases)
-        print(f"Removed alias '{alias}'")
+        send_message(f"Alias '{alias}' removed.")
     else:
-        print(f"Alias '{alias}' not found.", file=sys.stderr)
+        send_error(f"Alias '{alias}' not found.")
 
-def navigate_to_alias(alias, aliases):
+def navigate_to_alias(alias):
+    aliases = load_aliases()
     if alias in aliases:
-        print(aliases[alias])  # This gets used in `cd "$(qcd alias)"`
+        send_navigate(aliases[alias])
     else:
-        print(f"Alias '{alias}' not found.", file=sys.stderr)
+        send_error(f"Alias '{alias}' not found.")
 
 def main():
-    aliases = load_aliases()
-
-    # go to alias
-    if len(sys.argv) == 2:
+    # First, try go to alias
+    if len(sys.argv) >= 2:
         alias = sys.argv[1]
         if alias not in RESERVED_COMMANDS:
-            navigate_to_alias(alias, aliases)
+            navigate_to_alias(alias)
             return
 
     parser = argparse.ArgumentParser()
@@ -73,19 +89,22 @@ def main():
     # List subcommand
     subparsers.add_parser("list", help="List all aliases")
 
+    # Help subcommand
+    subparsers.add_parser("help", help="Show help message")
+
     # Remove subcommand
     remove_parser = subparsers.add_parser("remove", help="Remove an alias")
     remove_parser.add_argument("alias", help="The alias to remove")
 
-    args = parser.parse_args()
+    args, unknown_args = parser.parse_known_args()
     if args.command == "set":
-        set_alias(args.alias, aliases)
+        set_alias(args.alias)
     elif args.command == "list":
-        list_aliases(aliases)
+        list_aliases()
     elif args.command == "remove":
-        remove_alias(args.alias, aliases)
-    else:
-        parser.print_help()
+        remove_alias(args.alias)
+    elif args.command == "help":
+        send_message(parser.format_help());
 
 if __name__ == "__main__":
     main()
