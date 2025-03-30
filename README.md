@@ -59,7 +59,8 @@ For example, if you frequently navigate to a specific directory, you can set an 
    ```
 
    Replace `/path/to/quick-cd-cli/qcd with the full path to the qcd bash script.
-`source` command is required to change the current directory when using the script.
+
+   `source` command is required to change the current directory when using the script.
 
 6. **Reload Your Shell**:
    ```bash
