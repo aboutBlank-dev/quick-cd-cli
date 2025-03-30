@@ -26,7 +26,7 @@ For example, if you frequently navigate to a specific directory, you can set an 
 1. **Clone the Repository**:
 
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:aboutBlank-dev/quick-cd-cli.git
    cd quick-cd-cli
    ```
 
@@ -58,7 +58,7 @@ For example, if you frequently navigate to a specific directory, you can set an 
     alias qcd= "source /path/to/quick-cd-cli/qcd"
    ```
 
-   Replace `/path/to/quick-cd-cli/qcd with the full path to the qcd bash script.
+   Replace `/path/to/quick-cd-cli/qcd with` the full path to the qcd bash script.
 
    `source` command is required to change the current directory when using the script.
 
