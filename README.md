@@ -4,6 +4,8 @@ Quick CD CLI (`qcd`) is a command-line tool for managing and navigating director
 
 For example, if you frequently navigate to a specific directory, you can set an alias for it and quickly switch to that directory using the alias.
 
+Note: This was purely as a learning experience, bash obviously already has built-in alias which trivialises this.
+
 ```bash
     qcd set projects # Sets the current directory as an alias 'projects'
     qcd projects     # Navigates to the 'projects' directory, regardless of the current working directory
